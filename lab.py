@@ -61,30 +61,48 @@ def read_adjacency_dict(filename: str) -> dict[int, list[int]]:
     return content_dict
 
 
-# def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> list[int]:
-#     """
-#     :param list[list] graph: the adjacency list of a given graph
-#     :param int start: start vertex of search
-#     :returns list[int]: the dfs traversal of the graph
-#     >>> iterative_adjacency_dict_dfs({0: [1, 2], 1: [0, 2], 2: [0, 1]}, 0)
-#     [0, 1, 2]
-#     >>> iterative_adjacency_dict_dfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
-#     [0, 1, 2, 3]
-#     """
-#     pass
+def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> list[int]:
+    """
+    :param list[list] graph: the adjacency list of a given graph
+    :param int start: start vertex of search
+    :returns list[int]: the dfs traversal of the graph
+    >>> iterative_adjacency_dict_dfs({0: [1, 2], 1: [0, 2], 2: [0, 1]}, 0)
+    [0, 1, 2]
+    >>> iterative_adjacency_dict_dfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
+    [0, 1, 2, 3]
+    >>> iterative_adjacency_dict_dfs({0: [1, 2], 1: [0, 2], 2: [0, 1]}, 1)
+    [1, 0, 2]
+    """
+    trail = []
+    for vert, adj in list(graph.items())[start:]:
+        if vert not in trail:
+            trail.append(vert)
+        for el in adj:
+            if el not in trail:
+                trail.append(el)
+    return trail
 
 
-# def iterative_adjacency_matrix_dfs(graph: list[list], start: int) ->list[int]:
-#     """
-#     :param dict graph: the adjacency matrix of a given graph
-#     :param int start: start vertex of search
-#     :returns list[int]: the dfs traversal of the graph
-#     >>> iterative_adjacency_matrix_dfs([[0, 1, 1], [1, 0, 1], [1, 1, 0]], 0)
-#     [0, 1, 2]
-#     >>> iterative_adjacency_matrix_dfs([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [0, 0, 0, 0]], 0)
-#     [0, 1, 2, 3]
-#     """
-#     pass
+def iterative_adjacency_matrix_dfs(graph: list[list], start: int) ->list[int]:
+    """
+    :param dict graph: the adjacency matrix of a given graph
+    :param int start: start vertex of search
+    :returns list[int]: the dfs traversal of the graph
+    >>> iterative_adjacency_matrix_dfs([[0, 1, 1], [1, 0, 1], [1, 1, 0]], 0)
+    [0, 1, 2]
+    >>> iterative_adjacency_matrix_dfs([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [0, 0, 0, 0]], 0)
+    [0, 1, 2, 3]
+    >>> iterative_adjacency_matrix_dfs([[0, 1, 1], [1, 0, 1], [1, 1, 0]], 1)
+    [0, 2, 1]
+    """
+    trail = []
+    for i, vert in enumerate(graph[start:]):
+        if i not in trail:
+            trail.append(i)
+        for j, el in enumerate(vert):
+            if j not in trail and el == 1:
+                trail.append(j)
+    return trail
 
 
 # def recursive_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> list[int]:
