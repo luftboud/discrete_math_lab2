@@ -139,30 +139,57 @@ def iterative_adjacency_matrix_dfs(graph: list[list], start: int) ->list[int]:
 #     pass
 
 
-# def iterative_adjacency_dict_bfs(graph: dict[int, list[int]], start: int) -> list[int]:
-#     """
-#     :param list[list] graph: the adjacency list of a given graph
-#     :param int start: start vertex of search
-#     :returns list[int]: the bfs traversal of the graph
-#     >>> iterative_adjacency_dict_bfs({0: [1, 2], 1: [0, 2], 2: [0, 1]}, 0)
-#     [0, 1, 2]
-#     >>> iterative_adjacency_dict_bfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
-#     [0, 1, 2, 3]
-#     """
-#     pass
+def iterative_adjacency_dict_bfs(graph: dict[int, list[int]], start: int) -> list[int]:
+    """
+    :param list[list] graph: the adjacency list of a given graph
+    :param int start: start vertex of search
+    :returns list[int]: the bfs traversal of the graph
+    >>> iterative_adjacency_dict_bfs({0: [1, 2], 1: [0, 2], 2: [0, 1]}, 0)
+    [0, 1, 2]
+    >>> iterative_adjacency_dict_bfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
+    [0, 1, 2, 3]
+    >>> iterative_adjacency_dict_bfs({0: [1, 2], 1: [2, 3], 2: [], 3: [5], 4: [5], 5: [0, 2, 4]}, 0)
+    [0, 1, 2, 3, 5, 4]
+    """
+    checked = set()
+    trail = []
+    queue = [start]
+    while queue:
+        vert = queue.pop(0)
+        if vert not in checked:
+            trail.append(vert)
+            checked.add(vert)
+            for el in graph[vert]:
+                if el not in queue and el not in checked:
+                    queue.append(el)
+    return trail
 
 
-# def iterative_adjacency_matrix_bfs(graph: list[list[int]], start: int) ->list[int]:
-#     """
-#     :param dict graph: the adjacency matrix of a given graph
-#     :param int start: start vertex of search
-#     :returns list[int]: the bfs traversal of the graph
-#     >>> iterative_adjacency_matrix_bfs([[0, 1, 1], [1, 0, 1], [1, 1, 0]], 0)
-#     [0, 1, 2]
-#     >>> iterative_adjacency_matrix_bfs([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [0, 0, 0, 0]], 0)
-#     [0, 1, 2, 3]
-#     """
-#     pass
+def iterative_adjacency_matrix_bfs(graph: list[list[int]], start: int) ->list[int]:
+    """
+    :param dict graph: the adjacency matrix of a given graph
+    :param int start: start vertex of search
+    :returns list[int]: the bfs traversal of the graph
+    >>> iterative_adjacency_matrix_bfs([[0, 1, 1], [1, 0, 1], [1, 1, 0]], 0)
+    [0, 1, 2]
+    >>> iterative_adjacency_matrix_bfs([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [0, 0, 0, 0]], 0)
+    [0, 1, 2, 3]
+    >>> iterative_adjacency_matrix_bfs([[0, 1, 1, 0, 1, 1], [1, 0, 0, 1, 0, 0], \
+[1, 0, 0, 1, 0, 0], [0, 0, 1, 0, 0, 1], [1, 0, 0, 0, 0, 0], [1, 0, 0, 1, 0, 0]], 0)
+    [0, 1, 2, 4, 5, 3]
+    """
+    checked = set()
+    trail = []
+    queue = [start]
+    while queue:
+        vert = queue.pop(0)
+        if vert not in checked:
+            trail.append(vert)
+            checked.add(vert)
+            for el in [i for i, el in enumerate(graph[vert]) if el == 1]:
+                if el not in queue and el not in checked:
+                    queue.append(el)
+    return trail
 
 
 
@@ -265,7 +292,8 @@ def generate_adjacency_matrix(n: int, connection_chance: tuple[int]) -> list[lis
     """
     Generates a 2D boolean adjacency matrix
     :param n: number of vertices
-    :param connection_chance: boolean tuple, represents a connectivity chance/percentage between nodes
+    :param connection_chance: boolean tuple, represents a connectivity chance/percentage 
+    between nodes
     :return: the matrix
     """
     matrix = [[0] * n for _ in range(n)]
@@ -281,7 +309,8 @@ def generate_adjacency_dict(n: int, connection_chance: tuple[int]) -> dict[int, 
     """
     Generates an adjacency dict in a format {node: list of adjacent nodes}
     :param n: number of vertices
-    :param connection_chance: boolean tuple, represents a connectivity chance/percentage between nodes
+    :param connection_chance: boolean tuple, represents a connectivity chance/percentage 
+    between nodes
     :return: the dictionary
     """
     graph = defaultdict(list)
@@ -298,8 +327,6 @@ if __name__ == "__main__":
     # import doctest
     # doctest.testmod()
 
-    # import doctest
-    # print(doctest.testmod())
     from pprint import pprint
     m = generate_adjacency_graph(50, density=0.01, type_='matrix')
     pprint(m, width=300)
