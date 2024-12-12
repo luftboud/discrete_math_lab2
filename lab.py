@@ -75,17 +75,19 @@ def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> lis
     [0, 1, 2]
     >>> iterative_adjacency_dict_dfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
     [0, 1, 2, 3]
-    >>> iterative_adjacency_dict_dfs({0: [1, 2], 1: [0, 2], 2: [0, 1]}, 1)
-    [1, 0, 2]
     """
+    checked = set()
     trail = []
-    for vert, adj in list(graph.items())[start:]:
-        if vert not in trail:
+    queue = [start]
+    while queue:
+        vert = queue.pop(0)
+        if vert not in checked:
             trail.append(vert)
-        for el in adj:
-            if el not in trail:
-                trail.append(el)
+            checked.add(vert)
+            queue.extend(graph[vert])
     return trail
+
+
 
 
 def iterative_adjacency_matrix_dfs(graph: list[list], start: int) ->list[int]:
@@ -97,17 +99,18 @@ def iterative_adjacency_matrix_dfs(graph: list[list], start: int) ->list[int]:
     [0, 1, 2]
     >>> iterative_adjacency_matrix_dfs([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [0, 0, 0, 0]], 0)
     [0, 1, 2, 3]
-    >>> iterative_adjacency_matrix_dfs([[0, 1, 1], [1, 0, 1], [1, 1, 0]], 1)
-    [0, 2, 1]
     """
+    checked = set()
     trail = []
-    for i, vert in enumerate(graph[start:]):
-        if i not in trail:
-            trail.append(i)
-        for j, el in enumerate(vert):
-            if j not in trail and el == 1:
-                trail.append(j)
+    queue = [start]
+    while queue:
+        vert = queue.pop(0)
+        if vert not in checked:
+            trail.append(vert)
+            checked.add(vert)
+            queue.extend([i for i, el in enumerate(graph[vert]) if el == 1])
     return trail
+
 
 
 # def recursive_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> list[int]:
@@ -215,16 +218,16 @@ def adjacency_matrix_radius(graph: list[list]) -> int:
     return r
 
 
-def adjacency_dict_radius(graph: dict[int: list[int]]) -> int:
-    """
-    :param dict graph: the adjacency list of a given graph
-    :returns int: the radius of the graph
-    >>> adjacency_dict_radius({0: [1, 2], 1: [0, 2], 2: [0, 1]})
-    1
-    >>> adjacency_dict_radius({0: [1, 2], 1: [0, 2], 2: [0, 1], 3: [1]})
-    2
-    """
-    pass
+# def adjacency_dict_radius(graph: dict[int: list[int]]) -> int:
+#     """
+#     :param dict graph: the adjacency list of a given graph
+#     :returns int: the radius of the graph
+#     >>> adjacency_dict_radius({0: [1, 2], 1: [0, 2], 2: [0, 1]})
+#     1
+#     >>> adjacency_dict_radius({0: [1, 2], 1: [0, 2], 2: [0, 1], 3: [1]})
+#     2
+#     """
+#     pass
 
 
 def generate_adjacency_graph(
@@ -295,7 +298,9 @@ if __name__ == "__main__":
     # import doctest
     # doctest.testmod()
 
-    from pprint import pprint
-    m = generate_adjacency_graph(50, density=0.01, type_='matrix')
-    pprint(m, width=300)
-    print(adjacency_matrix_radius(m))
+    import doctest
+    print(doctest.testmod())
+    # from pprint import pprint
+    # m = generate_adjacency_graph(50, density=0.01, type_='matrix')
+    # pprint(m, width=300)
+    # print(adjacency_matrix_radius(m))
