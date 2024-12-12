@@ -298,9 +298,9 @@ if __name__ == "__main__":
     # import doctest
     # doctest.testmod()
 
-    import doctest
-    print(doctest.testmod())
-    # from pprint import pprint
-    # m = generate_adjacency_graph(50, density=0.01, type_='matrix')
-    # pprint(m, width=300)
-    # print(adjacency_matrix_radius(m))
+    # import doctest
+    # print(doctest.testmod())
+    from pprint import pprint
+    m = generate_adjacency_graph(50, density=0.01, type_='matrix')
+    pprint(m, width=300)
+    print(adjacency_matrix_radius(m))
