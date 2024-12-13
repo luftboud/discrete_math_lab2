@@ -94,9 +94,7 @@ def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> lis
     return trail
 
 
-
-
-def iterative_adjacency_matrix_dfs(graph: list[list], start: int) ->list[int]:
+def iterative_adjacency_matrix_dfs(graph: list[list], start: int) -> list[int]:
     """
     :param dict graph: the adjacency matrix of a given graph
     :param int start: start vertex of search
@@ -136,31 +134,55 @@ def iterative_adjacency_matrix_dfs(graph: list[list], start: int) ->list[int]:
     return trail
 
 
+def recursive_adjacency_dict_dfs(
+        graph: dict[int, list[int]],
+        start: int,
+        visited: set[int] = None,
+        trail: set[int] = None) -> list[int]:
+    """
+    :param list[list] graph: the adjacency list of a given graph
+    :param int start: start vertex of search
+    :param visited:
+    :param trail:
+    :returns list[int]: the dfs traversal of the graph
+    >>> recursive_adjacency_dict_dfs({0: [1, 2], 1: [0, 2], 2: [0, 1]}, 0)
+    [0, 1, 2]
+    >>> recursive_adjacency_dict_dfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
+    [0, 1, 2, 3]
+    """
+    visited = visited or set()
+    trail = trail or []
 
-# def recursive_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> list[int]:
-#     """
-#     :param list[list] graph: the adjacency list of a given graph
-#     :param int start: start vertex of search
-#     :returns list[int]: the dfs traversal of the graph
-#     >>> recursive_adjacency_dict_dfs({0: [1, 2], 1: [0, 2], 2: [0, 1]}, 0)
-#     [0, 1, 2]
-#     >>> recursive_adjacency_dict_dfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
-#     [0, 1, 2, 3]
-#     """
-#     pass
+    visited.add(start)
+    trail.append(start)
+
+    for neighbor in graph[start]:
+        if neighbor not in visited:
+            recursive_adjacency_dict_dfs(graph, neighbor, visited, trail)
+
+    return trail
 
 
-# def recursive_adjacency_matrix_dfs(graph: list[list[int]], start: int) ->list[int]:
-#     """
-#     :param dict graph: the adjacency matrix of a given graph
-#     :param int start: start vertex of search
-#     :returns list[int]: the dfs traversal of the graph
-#     >>> recursive_adjacency_matrix_dfs([[0, 1, 1], [1, 0, 1], [1, 1, 0]], 0)
-#     [0, 1, 2]
-#     >>> recursive_adjacency_matrix_dfs([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [0, 0, 0, 0]], 0)
-#     [0, 1, 2, 3]
-#     """
-#     pass
+def recursive_adjacency_matrix_dfs(graph: list[list[int]], start: int, visited: set[int] = None, trail: list[int] = None) -> list[int]:
+    """
+    :param dict graph: the adjacency matrix of a given graph
+    :param int start: start vertex of search
+    :returns list[int]: the dfs traversal of the graph
+    >>> recursive_adjacency_matrix_dfs([[0, 1, 1], [1, 0, 1], [1, 1, 0]], 0)
+    [0, 1, 2]
+    >>> recursive_adjacency_matrix_dfs([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [0, 0, 0, 0]], 0)
+    [0, 1, 2, 3]
+    """
+    visited = visited or set()
+    trail = trail or []
+
+    visited.add(start)
+    trail.append(start)
+    for neighbor, connected in enumerate(graph[start]):
+        if connected and neighbor not in visited:
+            recursive_adjacency_matrix_dfs(graph, neighbor, visited, trail)
+
+    return trail
 
 
 def iterative_adjacency_dict_bfs(graph: dict[int, list[int]], start: int) -> list[int]:
@@ -183,13 +205,14 @@ def iterative_adjacency_dict_bfs(graph: dict[int, list[int]], start: int) -> lis
         if vert not in checked:
             trail.append(vert)
             checked.add(vert)
+
             for el in graph[vert]:
                 if el not in queue and el not in checked:
                     queue.append(el)
     return trail
 
 
-def iterative_adjacency_matrix_bfs(graph: list[list[int]], start: int) ->list[int]:
+def iterative_adjacency_matrix_bfs(graph: list[list[int]], start: int) -> list[int]:
     """
     :param dict graph: the adjacency matrix of a given graph
     :param int start: start vertex of search
@@ -215,6 +238,41 @@ def iterative_adjacency_matrix_bfs(graph: list[list[int]], start: int) ->list[in
                     queue.append(el)
     return trail
 
+
+def bfs_distances(graph, start):
+    """
+    Computes distance beetween `start` vertex and all adjacent to it using BFS.
+
+    :param graph:
+    :param start:
+    :return:
+
+    >>> bfs_distances({0: [1, 2], 1: [0, 2], 2: [0, 1]}, 1)
+    [1, 0, 1]
+    >>> bfs_distances({0: [1, 2], 1: [0, 2], 2: [0, 1], 3: [1]}, 0)
+    [0, 1, 1, inf]
+    >>> bfs_distances({0: [1, 2], 1: [0, 2], 2: [0, 1], 3: []}, 3)
+    [inf, inf, inf, 0]
+    """
+    n = len(graph)
+    visited = set()
+    distances = [float("inf")] * n
+
+    queue = [start]
+    distances[start] = 0
+
+    while queue:
+        vert = queue.pop(0)
+        if vert not in visited:
+            visited.add(vert)
+
+        for el in graph[vert]:
+            if el not in queue and el not in visited:
+                distances[el] = distances[vert] + 1
+                visited.add(el)
+                queue.append(el)
+
+    return distances
 
 
 def floyd_warshall(graph: list[list[int]]) -> list[list[int]]:
@@ -256,7 +314,7 @@ def adjacency_matrix_radius(graph: list[list]) -> int:
     2
     >>> adjacency_matrix_radius([[0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [1, 0, 0, 0]])
     3
-    >>> adjacency_matrix_radius([[0, 1, 1, 0], [1, 0, 0, 0], [1, 1, 0, 0], [0, 0, 0, 0]])
+    >>> adjacency_matrix_radius([[0, 1, 1, 0], [1, 0, 1, 0], [1, 1, 0, 0], [0, 0, 0, 0]])
     inf
     """
     if not (graph and len(graph) == len(graph[0])):
@@ -269,16 +327,27 @@ def adjacency_matrix_radius(graph: list[list]) -> int:
     return r
 
 
-# def adjacency_dict_radius(graph: dict[int: list[int]]) -> int:
-#     """
-#     :param dict graph: the adjacency list of a given graph
-#     :returns int: the radius of the graph
-#     >>> adjacency_dict_radius({0: [1, 2], 1: [0, 2], 2: [0, 1]})
-#     1
-#     >>> adjacency_dict_radius({0: [1, 2], 1: [0, 2], 2: [0, 1], 3: [1]})
-#     2
-#     """
-#     pass
+def adjacency_dict_radius(graph: dict[int: list[int]]) -> int:
+    """
+    :param dict graph: the adjacency list of a given graph
+    :returns int: the radius of the graph
+    >>> adjacency_dict_radius({0: [1, 2], 1: [0, 2], 2: [0, 1]})
+    1
+    >>> adjacency_dict_radius({0: [1, 2], 1: [0, 2], 2: [0, 1], 3: [1]})
+    2
+    >>> adjacency_dict_radius({0: [1], 1: [2], 2: [3], 3: [1]})
+    3
+    >>> adjacency_dict_radius({0: [1, 2], 1: [0, 2], 2: [0, 1], 3: []})
+    inf
+    """
+    n = len(graph)
+    if not (graph and n - 1 == max(graph)):
+        return 0
+
+    eccentricities = [max(bfs_distances(graph, v)) for v in graph]
+    r = min(eccentricities)
+
+    return r
 
 
 def generate_adjacency_graph(
@@ -348,8 +417,8 @@ def generate_adjacency_dict(n: int, connection_chance: tuple[int]) -> dict[int, 
 
 
 if __name__ == "__main__":
-    # import doctest
-    # doctest.testmod()
+    import doctest
+    doctest.testmod()
 
     from pprint import pprint
     m = generate_adjacency_graph(50, density=0.01, type_='matrix')
