@@ -40,6 +40,7 @@ def read_adjacency_matrix(filename: str) -> list[list]:
     content = [el.strip()[:-1] for el in content]
     content_dict = {}
     for el in content:
+        el = el.split()
         content_dict.setdefault(int(el[0]),[])
         content_dict[int(el[0])].append(int(el[-1]))
     matrix = [[0 for _ in range(len(content_dict))] for _ in range(len(content_dict))]
@@ -75,6 +76,10 @@ def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> lis
     [0, 1, 2]
     >>> iterative_adjacency_dict_dfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
     [0, 1, 2, 3]
+    >>> iterative_adjacency_dict_dfs({0: [1, 6], 1: [0, 2, 6], 2: [1, 7], 3: [4, 8],\
+        4: [3, 5, 8, 9], 5: [4, 10], 6:[0,1,7,11], 7:[2,6,8,12], 8: [3,4,7,9,12,13], \
+        9:[4,8,10,13], 10:[5,9], 11:[6], 12:[7,8], 13: [8,9]},0)
+    [0, 1, 2, 7, 6, 11, 8, 3, 4, 5, 10, 9, 13, 12]
     """
     checked = set()
     trail = []
@@ -84,7 +89,8 @@ def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> lis
         if vert not in checked:
             trail.append(vert)
             checked.add(vert)
-            queue.extend(graph[vert])
+            new_queue = graph[vert] + queue
+            queue = new_queue
     return trail
 
 
@@ -99,6 +105,23 @@ def iterative_adjacency_matrix_dfs(graph: list[list], start: int) ->list[int]:
     [0, 1, 2]
     >>> iterative_adjacency_matrix_dfs([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [0, 0, 0, 0]], 0)
     [0, 1, 2, 3]
+    >>> iterative_adjacency_matrix_dfs([\
+        [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], \
+        [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], \
+        [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0], \
+        [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0], \
+        [0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0], \
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0], \
+        [1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0], \
+        [0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0], \
+        [0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1], \
+        [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1], \
+        [0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0], \
+        [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], \
+        [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0], \
+        [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]] \
+            ,0)
+    [0, 1, 2, 7, 6, 11, 8, 3, 4, 5, 10, 9, 13, 12]
     """
     checked = set()
     trail = []
@@ -108,7 +131,8 @@ def iterative_adjacency_matrix_dfs(graph: list[list], start: int) ->list[int]:
         if vert not in checked:
             trail.append(vert)
             checked.add(vert)
-            queue.extend([i for i, el in enumerate(graph[vert]) if el == 1])
+            new_queue = [i for i, el in enumerate(graph[vert]) if el == 1] + queue
+            queue = new_queue
     return trail
 
 
